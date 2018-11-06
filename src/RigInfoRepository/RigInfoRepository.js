@@ -1,9 +1,12 @@
 const rigInfoFetcher = require(`./RigInfoFetcher`),
       requestBuilder = require(`./RequestBuilder`),
       rigInfoSender = require(`./RigInfoSender`),
+      rigNameFormatter = require(`./RigNameFormatter`),
       rigInfoFormatter = require(`./RigInfoFormatter`),
       requestArray = requestBuilder.BuildRequestArray(),
-      rigInfo = {},
+      rigInfo = {
+          rigInfoArray : []
+      },
 
       resetRigInfoValues = () => {
         rigInfo.rigInfoArray = [];
@@ -15,21 +18,20 @@ const rigInfoFetcher = require(`./RigInfoFetcher`),
     
 module.exports = {
     updateAndSendRigInfo : async () => {
-        await resetRigInfoValues();
-
-        requestArray.forEach(async (rigAddress, index) => {
-                const data = await rigInfoFetcher.getRigInfo(rigAddress);
-                if ( data ) {
-                    const rig = await rigInfoFormatter.formatRigInfo(index, data);
-                    rigInfo.totalAcceptedShares += parseInt(rig.acceptedShares);
-                    rigInfo.totalHashrate += parseInt(rig.hashrateTotal);
-                    rigInfo.totalRejectedShares += parseInt(rig.rejectedShares);
-                    rigInfo.totalInvalidShares += parseInt(rig.invalidShares);
-                    rigInfo.rigInfoArray[index] = rig;
-                } else {
-                    rigInfo.rigInfoArray[index] = {rigNumber : index, totalTimeInMinutes : 'error'};
-                }
-            });
-        rigInfoSender.sendRigInfo(await rigInfo);
+        resetRigInfoValues();  
+        await Promise.all(requestArray.map(async (rigAddress, index) => {
+            const data = await rigInfoFetcher.getRigInfo(rigAddress);
+            if ( data ) {
+                const rig = rigInfoFormatter.formatRigInfo(index + 1, data);
+                rigInfo.totalAcceptedShares += parseInt(rig.acceptedShares);
+                rigInfo.totalHashrate += parseInt(rig.hashrateTotal);
+                rigInfo.totalRejectedShares += parseInt(rig.rejectedShares);
+                rigInfo.totalInvalidShares += parseInt(rig.invalidShares);
+                rigInfo.rigInfoArray[index] = rig;
+            } else {
+                rigInfo.rigInfoArray[index] = {rigNumber : rigNameFormatter.getCorrectRigNameFromNumber(index + 1), totalTimeInMinutes : 'error'};
+            }
+        }));
+        rigInfoSender.sendRigInfo(rigInfo);
     }
 };

@@ -1,7 +1,7 @@
 const axios = require(`axios`);
       
 module.exports = {
-    getRigInfo : async (rigAddress) => {
+    getRigInfo : async rigAddress => {
         try {
             const response =  await axios({
                 method: `get`,  
