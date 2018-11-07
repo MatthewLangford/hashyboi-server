@@ -12,6 +12,10 @@ module.exports = {
                                    .map(temp => parseInt(temp)),
                   fanPerCard = resultArray[6].split(`;`).filter((gpu, index) => index % 2 != 0)
                                   .map(fan => parseInt(fan)),
+                  avgHashratePerCard = Math.floor(hashratePerCard.reduce((prev, curr) => prev + curr) / hashratePerCard.length),
+                  avgFanPerCard = Math.floor(fanPerCard.reduce((prev, curr) => prev + curr) / fanPerCard.length),
+                  avgTempPerCard = Math.floor(tempPerCard.reduce((prev, curr) => prev + curr) / tempPerCard.length),
+                  avgSharesPerHour = Math.ceil(hashRateAndShareInfo[1] / (resultArray[1] / 60 )),
 
              rigInfo = {
                 rigNumber: rigNameFormatter.getCorrectRigNameFromNumber(rigNumber) ,
@@ -22,6 +26,10 @@ module.exports = {
                 rejectedShares: hashRateAndShareInfo[2],
                 invalidShares: invalidShareAndPoolSwitches[0],
                 poolSwitches: invalidShareAndPoolSwitches[1],
+                avgHashratePerCard,
+                avgFanPerCard,
+                avgTempPerCard,
+                avgSharesPerHour,
                 hashratePerCard,
                 tempPerCard,
                 fanPerCard

@@ -14,6 +14,7 @@ const rigInfoFetcher = require(`./RigInfoFetcher`),
         rigInfo.totalHashrate = 0;
         rigInfo.totalRejectedShares = 0;
         rigInfo.totalInvalidShares = 0;
+        rigInfo.totalTimeInMinutes = 0;
     };
     
 module.exports = {
@@ -23,6 +24,7 @@ module.exports = {
             const data = await rigInfoFetcher.getRigInfo(rigAddress);
             if ( data ) {
                 const rig = rigInfoFormatter.formatRigInfo(index + 1, data);
+                rigInfo.totalTimeInMinutes += parseInt(rig.totalTimeInMinutes);
                 rigInfo.totalAcceptedShares += parseInt(rig.acceptedShares);
                 rigInfo.totalHashrate += parseInt(rig.hashrateTotal);
                 rigInfo.totalRejectedShares += parseInt(rig.rejectedShares);
