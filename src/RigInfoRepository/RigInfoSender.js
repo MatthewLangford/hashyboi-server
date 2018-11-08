@@ -1,5 +1,5 @@
 const axios = require('axios'),
-      postUrl = 'http://192.168.1.66:3004/api/updateRigInfo';
+      postUrl = 'http://www.matthewlangford.net:3004/api/updateRigInfo';
 
 module.exports = {
     sendRigInfo : rigInfo => {

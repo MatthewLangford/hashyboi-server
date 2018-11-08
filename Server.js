@@ -1,4 +1,3 @@
 const rigInfoRepository = require('./src/RigInfoRepository/RigInfoRepository');
-
-rigInfoRepository.updateAndSendRigInfo();      
-setInterval(rigInfoRepository.updateAndSendRigInfo, 50 * 1000);
+      
+setInterval(rigInfoRepository.updateAndSendRigInfo, 60 * 1000);
