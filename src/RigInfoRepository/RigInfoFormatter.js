@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 const rigNameFormatter = require(`./RigNameFormatter`);
 
 module.exports = {
@@ -12,9 +14,9 @@ module.exports = {
                                    .map(temp => parseInt(temp)),
                   fanPerCard = resultArray[6].split(`;`).filter((gpu, index) => index % 2 != 0)
                                   .map(fan => parseInt(fan)),
-                  avgHashratePerCard = Math.floor(hashratePerCard.reduce((prev, curr) => prev + curr) / hashratePerCard.length),
-                  avgFanPerCard = Math.floor(fanPerCard.reduce((prev, curr) => prev + curr) / fanPerCard.length),
-                  avgTempPerCard = Math.floor(tempPerCard.reduce((prev, curr) => prev + curr) / tempPerCard.length),
+                  avgHashratePerCard = Math.floor(_.sum(hashratePerCard) / hashratePerCard.length),
+                  avgFanPerCard = Math.floor(_.sum(fanPerCard) / fanPerCard.length),
+                  avgTempPerCard = Math.floor(_.sum(tempPerCard) / tempPerCard.length),
                   avgSharesPerHour = Math.ceil(hashRateAndShareInfo[1] / (resultArray[1] / 60 )),
 
              rigInfo = {
